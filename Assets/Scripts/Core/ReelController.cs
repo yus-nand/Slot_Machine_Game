@@ -5,7 +5,7 @@ public class ReelController : MonoBehaviour
 {
     [SerializeField] private SymbolType[] symbols;
     public float timer;
-    private int selectedSymbolIndex; 
+    [HideInInspector] public int selectedSymbolIndex; 
     public void Spin()
     {
         selectedSymbolIndex = Random.Range(0, symbols.Length);

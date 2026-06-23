@@ -33,6 +33,32 @@ public class SlotMachineController : MonoBehaviour
         yield return _waitForSeconds;
         leverOff.SetActive(true);
         leverOn.SetActive(false);
+        string msg = CheckWin();
+        yield return new WaitForSeconds(0.5f);
+        Debug.Log(msg);
         lever.interactable = true;
+    }
+    string CheckWin()
+    {
+        float reel0, reel1, reel2;
+        reel0 = reels[0].selectedSymbolIndex;
+        reel1 = reels[1].selectedSymbolIndex;
+        reel2 = reels[2].selectedSymbolIndex;
+
+        if(reel0 == reel1 && reel0 == reel2)
+        {
+            if(reel0 == 0)      // means all are 7
+                return "HUGE WINNNN!!! +1000 points!!!";
+            else if(reel0 == 1)  // cherry
+                return "Winner +100 points!";
+            else if(reel0 == 2) // bell
+                return "Great WIN +250 points!!";
+            else if(reel0 == 3) // bar
+                return "BIG WIN +500 points!!!";
+            else
+                return "Something went wrong....";
+        }
+        else
+            return "No Win T_T";
     }
 }
