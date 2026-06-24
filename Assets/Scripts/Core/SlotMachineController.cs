@@ -5,11 +5,9 @@ using UnityEngine.UI;
 
 public class SlotMachineController : MonoBehaviour
 {
-    private static WaitForSeconds _waitForSeconds = new WaitForSeconds(2f);
     public Button lever;
     public GameObject leverOff, leverOn;
     public ReelController[] reels;
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         lever.onClick.AddListener(PlaySlotMachine);
@@ -64,13 +62,11 @@ public class SlotMachineController : MonoBehaviour
     IEnumerator PlayRoutine()
     {
         reels[0].Spin();
-
         yield return new WaitForSeconds(0.2f);
 
         reels[1].Spin();
-
         yield return new WaitForSeconds(0.2f);
-
+        
         reels[2].Spin();
     }
     private bool AreAllReelsStopped()

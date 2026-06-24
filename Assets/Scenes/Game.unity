@@ -615,7 +615,7 @@ GameObject:
   - component: {fileID: 563008150}
   - component: {fileID: 563008149}
   m_Layer: 5
-  m_Name: Image (3)
+  m_Name: Image (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -637,7 +637,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 230}
+  m_AnchoredPosition: {x: 0, y: 220}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &563008149
@@ -1056,8 +1056,8 @@ RectTransform:
   m_Children:
   - {fileID: 2037882875}
   - {fileID: 1774216807}
-  - {fileID: 1767315712}
   - {fileID: 977032117}
+  - {fileID: 1767315712}
   m_Father: {fileID: 228955615}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
@@ -1115,14 +1115,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 14fe194cb5ae1f844baf85fd0d5fa539, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ReelController
-  timer: 1.5
+  spinDuration: 3
+  maxSpinSpeed: 800
+  acceleration: 3
+  deceleration: 1
+  centerY: 0
+  stopTolerance: 10
   reelImages:
+  - {fileID: 1767315712}
   - {fileID: 2037882875}
   - {fileID: 1774216807}
-  - {fileID: 1767315712}
   - {fileID: 977032117}
-  selectedSymbolIndex: 0
   symbols: 03000000000000000100000002000000
+  selectedSymbolIndex: 0
 --- !u!1 &782214376
 GameObject:
   m_ObjectHideFlags: 0
@@ -1135,7 +1140,7 @@ GameObject:
   - component: {fileID: 782214379}
   - component: {fileID: 782214378}
   m_Layer: 5
-  m_Name: Image (2)
+  m_Name: Image (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1259,7 +1264,7 @@ GameObject:
   - component: {fileID: 977032119}
   - component: {fileID: 977032118}
   m_Layer: 5
-  m_Name: Image (3)
+  m_Name: Image (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1281,7 +1286,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 230}
+  m_AnchoredPosition: {x: 0, y: 220}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &977032118
@@ -1334,7 +1339,7 @@ GameObject:
   - component: {fileID: 1085351702}
   - component: {fileID: 1085351701}
   m_Layer: 5
-  m_Name: Image (3)
+  m_Name: Image (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1356,7 +1361,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 230}
+  m_AnchoredPosition: {x: 0, y: 220}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1085351701
@@ -1658,7 +1663,7 @@ GameObject:
   - component: {fileID: 1767315714}
   - component: {fileID: 1767315713}
   m_Layer: 5
-  m_Name: Image (2)
+  m_Name: Image (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1829,8 +1834,8 @@ RectTransform:
   m_Children:
   - {fileID: 1937533816}
   - {fileID: 712334424}
-  - {fileID: 782214377}
   - {fileID: 1085351700}
+  - {fileID: 782214377}
   m_Father: {fileID: 228955615}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
@@ -1888,14 +1893,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 14fe194cb5ae1f844baf85fd0d5fa539, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ReelController
-  timer: 2
+  spinDuration: 4
+  maxSpinSpeed: 800
+  acceleration: 3
+  deceleration: 1
+  centerY: 0
+  stopTolerance: 10
   reelImages:
+  - {fileID: 782214377}
   - {fileID: 1937533816}
   - {fileID: 712334424}
-  - {fileID: 782214377}
   - {fileID: 1085351700}
-  selectedSymbolIndex: 0
   symbols: 03000000000000000100000002000000
+  selectedSymbolIndex: 0
 --- !u!1 &1892660925
 GameObject:
   m_ObjectHideFlags: 0
@@ -1908,7 +1918,7 @@ GameObject:
   - component: {fileID: 1892660928}
   - component: {fileID: 1892660927}
   m_Layer: 5
-  m_Name: Image (2)
+  m_Name: Image (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2079,8 +2089,8 @@ RectTransform:
   m_Children:
   - {fileID: 1604049260}
   - {fileID: 441851285}
-  - {fileID: 1892660926}
   - {fileID: 563008148}
+  - {fileID: 1892660926}
   m_Father: {fileID: 228955615}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
@@ -2138,14 +2148,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 14fe194cb5ae1f844baf85fd0d5fa539, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ReelController
-  timer: 1
+  spinDuration: 2
+  maxSpinSpeed: 800
+  acceleration: 3
+  deceleration: 1
+  centerY: 0
+  stopTolerance: 10
   reelImages:
+  - {fileID: 1892660926}
   - {fileID: 1604049260}
   - {fileID: 441851285}
-  - {fileID: 1892660926}
   - {fileID: 563008148}
-  selectedSymbolIndex: 0
   symbols: 03000000000000000100000002000000
+  selectedSymbolIndex: 0
 --- !u!1 &2037882874
 GameObject:
   m_ObjectHideFlags: 0

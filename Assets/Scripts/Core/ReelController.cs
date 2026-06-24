@@ -25,7 +25,8 @@ public class ReelController : MonoBehaviour
 
     private void Awake()
     {
-        Application.targetFrameRate = 60;
+        Application.targetFrameRate = 60;           // doing this helped with image drift but did not
+                                                    // completly fix it
     }
 
     public void Spin()
@@ -64,9 +65,10 @@ public class ReelController : MonoBehaviour
         {
             image.localPosition += Vector3.up * offset;
         }
-
         currentSpeed = 0f;
         shouldSpin = false;
+        NormalizeImagePositions();
+
 
         Debug.Log($"Stopped On : {symbols[selectedSymbolIndex]}");
     }
@@ -83,17 +85,11 @@ public class ReelController : MonoBehaviour
     {
         if (!isStopping)
         {
-            currentSpeed = Mathf.Lerp(
-                currentSpeed,
-                maxSpinSpeed,
-                acceleration * Time.deltaTime);
+            currentSpeed = Mathf.Lerp(currentSpeed, maxSpinSpeed, acceleration * Time.deltaTime);
         }
         else
         {
-            currentSpeed = Mathf.Lerp(
-                currentSpeed,
-                100f,
-                deceleration * Time.deltaTime);
+            currentSpeed = Mathf.Lerp(currentSpeed, 100f, deceleration * Time.deltaTime);
         }
 
         foreach (Transform image in reelImages)
@@ -110,6 +106,35 @@ public class ReelController : MonoBehaviour
                         290f,
                         image.localPosition.z);
             }
+        }
+    }
+    private void NormalizeImagePositions()      // this still doesnt fix the drift but keeps it limited
+    {
+        if (reelImages.Length == 0)
+            return;
+
+        float spacing = 110f;
+
+        // Find the topmost image and its index
+        int topImageIndex = 0;
+        float topImageY = reelImages[0].localPosition.y;
+        
+        for (int i = 1; i < reelImages.Length; i++)
+        {
+            if (reelImages[i].localPosition.y > topImageY)
+            {
+                topImageY = reelImages[i].localPosition.y;
+                topImageIndex = i;
+            }
+        }
+
+        // setting all images position with even spacing in a cyclic order
+        for (int i = 0; i < reelImages.Length; i++)
+        {
+            int imageIndex = (topImageIndex + i) % reelImages.Length;
+            float targetY = topImageY - (i * spacing);
+            Vector3 pos = reelImages[imageIndex].localPosition;
+            reelImages[imageIndex].localPosition = new Vector3(pos.x, targetY, pos.z);
         }
     }
 }
