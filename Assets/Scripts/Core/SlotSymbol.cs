@@ -2,10 +2,10 @@ using UnityEngine;
 
 public enum SymbolType
 {
+    Seven,
     Cherry,
     Bell,
-    Bar,
-    Seven
+    Bar
 }
 public class SlotSymbol : MonoBehaviour
 {

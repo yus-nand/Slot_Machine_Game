@@ -21,6 +21,7 @@ public class SlotMachineController : MonoBehaviour
         {
             reel.Spin();
         }
+        StartCoroutine(PlayRoutine());
         StartCoroutine(SwapSprites());
         Debug.Log("Slot Machine done playing");
     }
@@ -60,5 +61,17 @@ public class SlotMachineController : MonoBehaviour
         }
         else
             return "No Win T_T";
+    }
+    IEnumerator PlayRoutine()
+    {
+        reels[0].Spin();
+
+        yield return new WaitForSeconds(0.2f);
+
+        reels[1].Spin();
+
+        yield return new WaitForSeconds(0.2f);
+
+        reels[2].Spin();
     }
 }
