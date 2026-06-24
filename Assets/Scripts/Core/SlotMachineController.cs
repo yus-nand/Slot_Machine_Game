@@ -17,21 +17,20 @@ public class SlotMachineController : MonoBehaviour
     void PlaySlotMachine()
     {
         Debug.Log("Slot Machine is playing");
-        foreach(var reel in reels)
-        {
-            reel.Spin();
-        }
         StartCoroutine(PlayRoutine());
-        StartCoroutine(SwapSprites());
+        StartCoroutine(HandleSpinUI());
         Debug.Log("Slot Machine done playing");
     }
 
-    IEnumerator SwapSprites()
+    IEnumerator HandleSpinUI()
     {
         lever.interactable = false;
         leverOff.SetActive(false);
         leverOn.SetActive(true);
-        yield return _waitForSeconds;
+        while (!AreAllReelsStopped())
+        {
+            yield return null;
+        }
         leverOff.SetActive(true);
         leverOn.SetActive(false);
         string msg = CheckWin();
@@ -48,13 +47,13 @@ public class SlotMachineController : MonoBehaviour
 
         if(reel0 == reel1 && reel0 == reel2)
         {
-            if(reel0 == 0)      // means all are 7
+            if(reel0 == 1)      // means all are 7
                 return "HUGE WINNNN!!! +1000 points!!!";
-            else if(reel0 == 1)  // cherry
+            else if(reel0 == 2)  // cherry
                 return "Winner +100 points!";
-            else if(reel0 == 2) // bell
+            else if(reel0 == 3) // bell
                 return "Great WIN +250 points!!";
-            else if(reel0 == 3) // bar
+            else if(reel0 == 0) // bar
                 return "BIG WIN +500 points!!!";
             else
                 return "Something went wrong....";
@@ -73,5 +72,15 @@ public class SlotMachineController : MonoBehaviour
         yield return new WaitForSeconds(0.2f);
 
         reels[2].Spin();
+    }
+    private bool AreAllReelsStopped()
+    {
+        foreach (var reel in reels)
+        {
+            if (reel.IsSpinning)
+                return false;
+        }
+
+        return true;
     }
 }

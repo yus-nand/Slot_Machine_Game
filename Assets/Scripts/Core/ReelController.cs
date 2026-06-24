@@ -5,7 +5,12 @@ public class ReelController : MonoBehaviour
 {
     [Header("Settings")]
     [SerializeField] private float spinDuration;
-    [SerializeField] private float spinSpeed = 100f;
+    [SerializeField] private float maxSpinSpeed = 800f;
+    [SerializeField] private float acceleration = 10f;
+    [SerializeField] private float deceleration = 5f;
+
+    private float currentSpeed;
+    private bool isStopping;
     [SerializeField] private float centerY = 0f;
     [SerializeField] private float stopTolerance = 10f;
 
@@ -15,7 +20,7 @@ public class ReelController : MonoBehaviour
 
     [HideInInspector]
     public int selectedSymbolIndex;
-
+    public bool IsSpinning => shouldSpin;
     private bool shouldSpin;
 
     private void Awake()
@@ -38,19 +43,21 @@ public class ReelController : MonoBehaviour
     private IEnumerator SpinRoutine()
     {
         shouldSpin = true;
+        isStopping = false;
 
-        // Minimum spin time
+        currentSpeed = 0f;
+
         yield return new WaitForSeconds(spinDuration);
+
+        isStopping = true;
 
         Transform targetImage = reelImages[selectedSymbolIndex];
 
-        // Continue spinning until selected image reaches center
         while (Mathf.Abs(targetImage.localPosition.y - centerY) > stopTolerance)
         {
             yield return null;
         }
 
-        // Snap perfectly into place
         float offset = centerY - targetImage.localPosition.y;
 
         foreach (Transform image in reelImages)
@@ -58,6 +65,7 @@ public class ReelController : MonoBehaviour
             image.localPosition += Vector3.up * offset;
         }
 
+        currentSpeed = 0f;
         shouldSpin = false;
 
         Debug.Log($"Stopped On : {symbols[selectedSymbolIndex]}");
@@ -73,13 +81,34 @@ public class ReelController : MonoBehaviour
 
     private void MoveReel()
     {
+        if (!isStopping)
+        {
+            currentSpeed = Mathf.Lerp(
+                currentSpeed,
+                maxSpinSpeed,
+                acceleration * Time.deltaTime);
+        }
+        else
+        {
+            currentSpeed = Mathf.Lerp(
+                currentSpeed,
+                100f,
+                deceleration * Time.deltaTime);
+        }
+
         foreach (Transform image in reelImages)
         {
-            image.Translate(Vector3.down * spinSpeed , Space.Self);
+            image.Translate(
+                Vector3.down * currentSpeed * Time.deltaTime,
+                Space.Self);
 
             if (image.localPosition.y <= -150f)
             {
-                image.localPosition = new Vector3(image.localPosition.x, 290f, image.localPosition.z);
+                image.localPosition =
+                    new Vector3(
+                        image.localPosition.x,
+                        290f,
+                        image.localPosition.z);
             }
         }
     }
