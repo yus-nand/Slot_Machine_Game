@@ -4,21 +4,15 @@ using UnityEngine;
 public class ReelController : MonoBehaviour
 {
     [Header("Settings")]
-    [SerializeField] private float spinDuration = 2f;
+    [SerializeField] private float spinDuration;
     [SerializeField] private float maxSpinSpeed = 800f;
     [SerializeField] private float acceleration = 10f;
     [SerializeField] private float deceleration = 5f;
 
-    [Header("Layout")]
-    // The Y below which an image wraps back to the top
-    [SerializeField] private float wrapBelowY = -150f;
-    // The Y an image is teleported to when it wraps
-    // Should be: wrapAboveY = wrapBelowY + (spacing * imageCount)
-    // With 4 images at 110 spacing: -150 + 440 = 290
-    [SerializeField] private float wrapAboveY = 290f;
-    [SerializeField] private float spacing = 110f;
+    private float currentSpeed;
+    private bool isStopping;
     [SerializeField] private float centerY = 0f;
-    [SerializeField] private float stopTolerance = 2f;
+    [SerializeField] private float stopTolerance = 10f;
 
     [Header("References")]
     [SerializeField] private Transform[] reelImages;
@@ -27,46 +21,31 @@ public class ReelController : MonoBehaviour
     [HideInInspector]
     public int selectedSymbolIndex;
     public bool IsSpinning => shouldSpin;
-
-    private float currentSpeed;
-    private bool isStopping;
     private bool shouldSpin;
-
     private AudioManager audioManager;
     private AudioSource audioSource;
 
+
+    private void Awake()
+    {
+        Application.targetFrameRate = 60;           // doing this helped with image drift but did not
+                                                    // completly fix it
+    }
     private void Start()
     {
         audioManager = FindAnyObjectByType<AudioManager>();
-        audioSource = GetComponent<AudioSource>();
-        PlaceImagesAtRest(0); // default: symbol 0 at center on startup
-    }
-
-    // Arranges images so that targetIndex sits at centerY,
-    // and all others are evenly spaced above it.
-    private void PlaceImagesAtRest(int targetIndex)
-    {
-        int n = reelImages.Length;
-        for (int i = 0; i < n; i++)
-        {
-            // delta: how many slots above center this image should sit
-            int delta = i - targetIndex;
-            // Wrap so no image ends up far below center at rest
-            // e.g. for 4 images, delta can be -1, 0, 1, 2
-            while (delta < -1) delta += n;   // one slot below is fine, more is not
-            while (delta > n - 2) delta -= n;
-
-            float y = centerY + delta * spacing;
-            Vector3 p = reelImages[i].localPosition;
-            reelImages[i].localPosition = new Vector3(p.x, y, p.z);
-        }
+        audioSource = GetComponent<AudioSource>(); 
     }
 
     public void Spin()
     {
-        if (shouldSpin) return;
+        if (shouldSpin)
+            return;
+
         selectedSymbolIndex = Random.Range(0, symbols.Length);
+
         Debug.Log($"Target Symbol : {symbols[selectedSymbolIndex]}");
+
         StartCoroutine(SpinRoutine());
     }
 
@@ -75,24 +54,29 @@ public class ReelController : MonoBehaviour
         audioSource.Play();
         shouldSpin = true;
         isStopping = false;
+
         currentSpeed = 0f;
 
         yield return new WaitForSeconds(spinDuration);
 
         isStopping = true;
 
-        // Wait until the target image is close to centerY
-        Transform target = reelImages[selectedSymbolIndex];
-        while (Mathf.Abs(target.localPosition.y - centerY) > stopTolerance)
+        Transform targetImage = reelImages[selectedSymbolIndex];
+
+        while (Mathf.Abs(targetImage.localPosition.y - centerY) > stopTolerance)
         {
             yield return null;
         }
 
-        // Hard snap: place every image on a perfect grid, no accumulated error
+        float offset = centerY - targetImage.localPosition.y;
+
+        foreach (Transform image in reelImages)
+        {
+            image.localPosition += Vector3.up * offset;
+        }
         currentSpeed = 0f;
         shouldSpin = false;
-        PlaceImagesAtRest(selectedSymbolIndex);
-
+        NormalizeImagePositions();
         audioSource.Stop();
         audioSource.PlayOneShot(audioManager.clips[3]);
         Debug.Log($"Stopped On : {symbols[selectedSymbolIndex]}");
@@ -100,28 +84,66 @@ public class ReelController : MonoBehaviour
 
     private void Update()
     {
-        if (!shouldSpin) return;
+        if (!shouldSpin)
+            return;
 
+        MoveReel();
+    }
+
+    private void MoveReel()
+    {
         if (!isStopping)
         {
             currentSpeed = Mathf.Lerp(currentSpeed, maxSpinSpeed, acceleration * Time.deltaTime);
         }
         else
         {
-            currentSpeed = Mathf.Lerp(currentSpeed, 0f, deceleration * Time.deltaTime);
+            currentSpeed = Mathf.Lerp(currentSpeed, 100f, deceleration * Time.deltaTime);
         }
 
-        float delta = currentSpeed * Time.deltaTime;
-
-        foreach (Transform img in reelImages)
+        foreach (Transform image in reelImages)
         {
-            float newY = img.localPosition.y - delta;
+            image.Translate(
+                Vector3.down * currentSpeed * Time.deltaTime,
+                Space.Self);
 
-            // Once an image scrolls below wrapBelowY, jump it to wrapAboveY
-            if (newY <= wrapBelowY)
-                newY += (wrapAboveY - wrapBelowY);
+            if (image.localPosition.y <= -150f)
+            {
+                image.localPosition =
+                    new Vector3(
+                        image.localPosition.x,
+                        290f,
+                        image.localPosition.z);
+            }
+        }
+    }
+    private void NormalizeImagePositions()      // this still doesnt fix the drift but keeps it limited
+    {
+        if (reelImages.Length == 0)
+            return;
 
-            img.localPosition = new Vector3(img.localPosition.x, newY, img.localPosition.z);
+        float spacing = 110f;
+
+        // Find the topmost image and its index
+        int topImageIndex = 0;
+        float topImageY = reelImages[0].localPosition.y;
+        
+        for (int i = 1; i < reelImages.Length; i++)
+        {
+            if (reelImages[i].localPosition.y > topImageY)
+            {
+                topImageY = reelImages[i].localPosition.y;
+                topImageIndex = i;
+            }
+        }
+
+        // setting all images position with even spacing in a cyclic order
+        for (int i = 0; i < reelImages.Length; i++)
+        {
+            int imageIndex = (topImageIndex + i) % reelImages.Length;
+            float targetY = topImageY - (i * spacing);
+            Vector3 pos = reelImages[imageIndex].localPosition;
+            reelImages[imageIndex].localPosition = new Vector3(pos.x, targetY, pos.z);
         }
     }
 }
