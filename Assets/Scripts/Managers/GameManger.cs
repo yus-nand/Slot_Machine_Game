@@ -1,5 +1,7 @@
 using UnityEngine;
+using UnityEngine.UI;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class GameManger : MonoBehaviour
 {
@@ -7,6 +9,7 @@ public class GameManger : MonoBehaviour
     public int currentBet;
     public TextMeshProUGUI currentBetText;
     [SerializeField] TextMeshProUGUI messaegeText;
+    [SerializeField] private Button retryButton;
     private ScoreManager scoreManager;
     void Awake()
     {
@@ -15,6 +18,14 @@ public class GameManger : MonoBehaviour
     private void Start()
     {
         BlockingOverlayPanel.SetActive(false);
+        retryButton.onClick.AddListener(RetryGame);
+    }
+    void Update()
+    {
+        if(scoreManager.Score < 100)
+        {
+            retryButton.gameObject.SetActive(true);
+        }
     }
     public void SetBet(int bet)
     {
@@ -41,5 +52,9 @@ public class GameManger : MonoBehaviour
     public void UpdateMessage(string message)
     {
         messaegeText.text = message;
+    }
+    private void RetryGame()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 }

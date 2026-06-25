@@ -27,7 +27,7 @@
     },
     "com.unity.collab-proxy": {
       "version": "2.11.4",
-      "depth": 0,
+      "depth": 1,
       "source": "registry",
       "dependencies": {},
       "url": "https://packages.unity.com"
