@@ -16,9 +16,9 @@ public class ScoreManager : MonoBehaviour
     {
         scoreHolderText.text = "$" + score;
     }
-    public void ModifyScore(int points)
+    public void ModifyScore(float points)
     {
-        score += points;
+        score += (int)points;
         UpdateUI();
     }
     void UpdateUI()

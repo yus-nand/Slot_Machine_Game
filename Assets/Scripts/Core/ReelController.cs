@@ -22,11 +22,19 @@ public class ReelController : MonoBehaviour
     public int selectedSymbolIndex;
     public bool IsSpinning => shouldSpin;
     private bool shouldSpin;
+    private AudioManager audioManager;
+    private AudioSource audioSource;
+
 
     private void Awake()
     {
         Application.targetFrameRate = 60;           // doing this helped with image drift but did not
                                                     // completly fix it
+    }
+    private void Start()
+    {
+        audioManager = FindAnyObjectByType<AudioManager>();
+        audioSource = GetComponent<AudioSource>(); 
     }
 
     public void Spin()
@@ -43,6 +51,7 @@ public class ReelController : MonoBehaviour
 
     private IEnumerator SpinRoutine()
     {
+        audioSource.Play();
         shouldSpin = true;
         isStopping = false;
 
@@ -68,8 +77,8 @@ public class ReelController : MonoBehaviour
         currentSpeed = 0f;
         shouldSpin = false;
         NormalizeImagePositions();
-
-
+        audioSource.Stop();
+        audioSource.PlayOneShot(audioManager.clips[3]);
         Debug.Log($"Stopped On : {symbols[selectedSymbolIndex]}");
     }
 
