@@ -1,5 +1,7 @@
 # Unity Slot Machine
 
+Unity Engine version: 6000.4.0f1
+
 ## Game Overview
 
 This project is a simple 3-reel slot machine game developed in Unity. The player starts with $1000 and can place one of four available bets:
@@ -41,9 +43,9 @@ If the reels do not match, the player loses the amount they bet.
 
 ## Running the WebGL Build
 
-### Option 1: Play the WebGL Build
+### Option 1: Play the WebGL Build	(can't gurantee with this method)
 
-1. Navigate to the `Build/WebGL` folder.
+1. Navigate to the `Assets/Build` folder.
 2. Serve the contents with a local web server (browsers block some WebGL features when opened directly from disk).
 3. Open the game in your browser.
 
@@ -55,12 +57,17 @@ python -m http.server 8000
 
 Then open `http://localhost:8000` in your browser.
 
-### Option 2: Open the Project in Unity
+### Option 2: Open the Project in Unity	 (this will work but requires setup)
 
 1. Clone the repository.
 2. Open the project with the Unity Editor.
 3. Open the main game scene.
 4. Press Play in the Unity Editor.
+
+### Option 3: Playtest the game on Unity Play website
+
+I have uploaded the final WebGL build of the game in Unity Play
+Play here: https://play.unity.com/en/games/5f756aa7-76a2-46c6-a614-a525f52f799b/slot-machine-game
 
 ## How to Play
 
@@ -128,4 +135,8 @@ The project showcases Unity programming fundamentals, object-oriented design, UI
 
 ---
 
-If you'd like, I can also convert this to `README.md` in the repository root and add a short contributing section.
+Credits: 
+Reel stoppping sfx from samplefocus.com
+Reel spinning sfx from motioniarray.com
+Background music from pixabay.com
+Lever pulling up and down sfx from elevenlabs.io (AI generated)
