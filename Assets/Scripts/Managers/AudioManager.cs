@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class AudioManager : MonoBehaviour
 {
+    [Header("References")]
     public AudioClip[] clips;
     [SerializeField] private AudioSource audioSource;
     [SerializeField] private AudioSource sfxSource;

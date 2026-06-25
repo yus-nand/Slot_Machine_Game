@@ -3,6 +3,7 @@ using TMPro;
 
 public class ScoreManager : MonoBehaviour
 {
+    [Header("References")]
     public TextMeshProUGUI scoreHolderText;
     private int score = 1000;
     public int Score

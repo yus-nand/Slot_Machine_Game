@@ -1,10 +1,10 @@
-
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class SlotMachineController : MonoBehaviour
 {
+    [Header("References")]
     public Button lever;
     public GameObject leverOff, leverOn;
     public ReelController[] reels;

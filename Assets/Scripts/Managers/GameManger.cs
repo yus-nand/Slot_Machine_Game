@@ -5,11 +5,14 @@ using UnityEngine.SceneManagement;
 
 public class GameManger : MonoBehaviour
 {
+    [Header("References")]
     public GameObject BlockingOverlayPanel;
-    public int currentBet;
     public TextMeshProUGUI currentBetText;
     [SerializeField] TextMeshProUGUI messaegeText;
     [SerializeField] private Button retryButton;
+    
+    [Header("Game State")]
+    public int currentBet;
     private ScoreManager scoreManager;
     void Awake()
     {
